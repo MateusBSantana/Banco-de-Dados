@@ -1,0 +1,93 @@
+/*1) Liste todos os alimentos da tabela comidas onde o preco seja menor que 10 ou
+maior que 20*/
+
+SELECT * FROM comidas;
+SELECT * FROM funcionarios;
+SELECT * FROM vendas;
+
+SELECT * FROM comidas WHERE preco < 10 OR preco > 20;
+
+/*2) Liste todos os alimentos da tabela comidas onde o aumento_preco não seja null*/
+
+SELECT * FROM comidas WHERE aumento_preco IS NOT NULL;
+
+/*3) Liste todos os alimentos da tabela funcionarios onde o os sobrenomes
+começam com H até P*/
+
+SELECT * FROM funcionarios WHERE sobrenome >= 'H' AND sobrenome <= 'P';
+
+/*4) Pesquise os itens que foram vendidos sem desconto. As colunas presentes no
+resultado da consulta são: ID_NF, ID_ITEM, COD_PROD E VALOR_UNIT.*/
+
+SELECT id_nf, id_item, cod_prod, valor_unit FROM vendas WHERE desconto IS NULL;
+
+/*5) Pesquise os itens que foram vendidos com desconto. As colunas presentes no
+resultado da consulta são: ID_NF, ID_ITEM, COD_PROD, VALOR_UNIT E O VALOR
+VENDIDO. OBS: O valor vendido é igual ao VALOR_UNIT -
+(VALOR_UNIT*DESCONTO).*/
+
+SELECT id_nf, id_item, cod_prod, valor_unit, valor_unit - (valor_unit * desconto) valor_vendido FROM vendas WHERE desconto IS NOT NULL;
+
+/*6) Altere o valor do desconto (para zero) de todos os registros onde este campo é
+nulo.*/
+SELECT * FROM vendas;    
+
+UPDATE vendas SET desconto = 0 
+	WHERE desconto IS NULL;
+
+/*7) Pesquise os itens que foram vendidos. As colunas presentes no resultado da
+consulta são: ID_NF, ID_ITEM, COD_PROD, VALOR_UNIT, VALOR_TOTAL,
+DESCONTO, VALOR_VENDIDO. OBS: O VALOR_TOTAL é obtido pela fórmula:
+QUANTIDADE * VALOR_UNIT. O VALOR_VENDIDO é igual a VALOR_UNIT -
+(VALOR_UNIT*DESCONTO/100).*/
+
+SELECT id_nf, id_item, cod_prod, valor_unit,  QUANTIDADE * VALOR_UNIT valor_total, valor_unit - (valor_unit * desconto) valor_vendido FROM vendas;
+
+/*8) Pesquise o valor total das notas fiscais e ordene o resultado do maior para o
+menor valor. As colunas presentes no resultado da consulta são: id_nf e
+valor_total. O valor_total é obtido pela fórmula: soma de quantidade *
+valor_unit para cada item. Agrupe o resultado da consulta por id_nf.*/
+
+SELECT * FROM vendas;
+
+SELECT  id_nf, SUM(quantidade * valor_unit) Valo_Total FROM vendas  GROUP BY id_nf ORDER BY quantidade * valor_unit DESC;
+
+/*9) Consulte o produtos por quantidade vendida em termos de quantidade total. As
+colunas presentes no resultado da consulta são: cod_prod e quantidade. Agrupe
+o resultado da consulta por cod_prod e ordene de forma que o produto com maior
+quantidade vendida apareça no topo.*/
+
+SELECT cod_prod, SUM(quantidade) quantidade FROM vendas GROUP BY cod_prod ORDER BY quantidade DESC;
+
+/*10) Consulte as notas fiscais que incluem a venda de mais de 10 unidades de pelo
+menos um produto. As colunas presentes no resultado da consulta são: id_nf,
+cod_prod e quantidade. Agrupe o resultado da consulta por id_nf e cod_prod.*/
+
+SELECT id_nf, cod_prod, quantidade FROM vendas WHERE (quantidade > 10) GROUP BY cod_prod, quantidade;
+
+/*11) Consulte o valor médio dos descontos dados por produto. As colunas presentes
+no resultado da consulta são: cod_prod e media_desconto. Agrupe o resultado
+da consulta por cod_prod.*/
+
+SELECT cod_prod, AVG(desconto) media_desconto FROM vendas GROUP BY cod_prod;
+
+/*12) Consulte o menor, o maior e o valor médio dos descontos dados por produto. As
+colunas presentes no resultado da consulta são: cod_prod, menor_desconto,
+maior_desconto e media_desconto. Agrupe o resultado da consulta por
+cod_prod.*/
+
+SELECT cod_prod, MIN(desconto) menor_desconto, MAX(desconto) maior_desconto, AVG(desconto) media_desconto FROM vendas GROUP BY cod_prod;
+
+/*13) Consulte a quantidade de itens vendidos em cada nota fiscal. As colunas
+presentes no resultado da consulta são: id_nf e qtd_itens, onde qtd_itens
+representa o número de diferentes itens por nota fiscal. Agrupe o resultado da
+consulta por id_nf.*/
+
+SELECT id_nf,  COUNT(id_nf) qtd_itens FROM vendas GROUP BY id_nf;
+
+
+
+
+
+
+
